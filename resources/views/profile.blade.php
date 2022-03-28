@@ -2,24 +2,23 @@
 
 
 @section('content')
-
-<div id="element" class="relative w-5/6 h-screen overflow-y-auto" style="background: var(--skin-color);">
+<div id="element" class="relative w-5/6 h-screen overflow-y-auto">
   <div class="flex flex-col pb-5">
     <div class="relative flex flex-col mb-7">
       <div class="flex flex-col justify-center items-center">
         <img class="w-full 2xl:h-64 h-64 shadow-lg object-cover"
-          src="@if(asset('/banners/'.Auth::user()->banner_path)) 
+          src="@if(Auth::user()->banner_path) 
                 {{asset('/banners/'.Auth::user()->banner_path)}} 
               @else 
-                {{asset('/public/banners/default.jpg')}} 
+                {{asset('/banners/default.jpg')}} 
               @endif" alt="user-pic">
         <div class="flex flex-row justify-between items-center w-5/6">
           <div class="flex flex-row ">
             <img class="border-4 border-gray-200 rounded-full w-48 h-48 -mt-10 shadow-xl object-cover"
-              src="@if(asset('/images/'.Auth::user()->image_path)) 
+              src="@if(Auth::user()->image_path) 
                     {{asset('/images/'.Auth::user()->image_path)}}
                   @else 
-                    {{asset('/public/images/default.png')}} 
+                    {{asset('/images/default.png')}} 
                   @endif"
               alt="user-pic">
             <div class="flex flex-col items-center pl-5" >
@@ -93,10 +92,13 @@
                     <div id="accordion-collapse-body-1" class="" aria-labelledby="accordion-collapse-heading-1">
                       <div class="timeline-body">
                         <div class="timeline-header flex justify-start items-center flex-row ">
-                          <span class="mr-4">
-                            @if(Auth::user()->image_path)
-                              <img class="border-4 border-gray-200 rounded-full w-16 h-16 shadow-xl object-cover" src="{{asset('/images/'.Auth::user()->image_path)}}" alt="profile_image" >
-                            @endif
+                          <span class="mr-4">                            
+                              <img class="border-4 border-gray-200 rounded-full w-16 h-16 shadow-xl object-cover" 
+                              src="@if(Auth::user()->image_path) 
+                                {{asset('/images/'.Auth::user()->image_path)}} 
+                              @else 
+                                {{asset('/images/default.png')}} 
+                              @endif" alt="profile_image" >
                           </span>
                           <span class="username capitalize"><a href="javascript:;">{{ Auth::user()->name }}</a>
                             <small></small></span>

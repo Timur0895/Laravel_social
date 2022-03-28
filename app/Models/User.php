@@ -46,6 +46,19 @@ class User extends Authenticatable
     ];
 
     public function post() {
-      return $this->hasMany(Post::class);
-  }
+      return $this->hasMany(Post::class)->get();
+    }
+
+    public function getNameAndSurname()
+    {
+      if ($this->name && $this->surname) {
+        return "{$this->name} {$this->surname}";
+      }
+
+      if ($this->name) {
+        return $this->name;
+      }
+
+      return null;
+    }
 }
