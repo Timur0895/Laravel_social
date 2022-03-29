@@ -30,6 +30,7 @@ Route::get("/search", [SearchController::class, "getSearch"])->middleware('auth'
 
 
 Route::get("/friends", [FriendsController::class, "index"])->middleware('auth')->name("friends");
+Route::get("/friends/add/{usermail}", [FriendsController::class, "getAdd"])->middleware('auth')->name("addFriend");
 
 
 Route::get("/chat", [ChatController::class, "index"])->middleware('auth')->name("chat");
