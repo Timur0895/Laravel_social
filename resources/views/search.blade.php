@@ -19,7 +19,11 @@
           @endforeach
         @endforeach
       @endif        
+<<<<<<< HEAD
     </div>        
+=======
+    </div>
+>>>>>>> 84d3d292a27b060bfbb63dcf64d1fab86450ab8d
   </div>
   
 @endsection

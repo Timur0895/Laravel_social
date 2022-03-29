@@ -29,7 +29,11 @@
           <div class="p-4 flex flex-row text-center h-full">
             <ul class="flex flex-row justify-around">
               <li class="flex flex-col px-2">
+<<<<<<< HEAD
                 <a class="hover:text-white font-semibold block text-gray-200 text-2xl mb-1">{{Auth::user()->post()->count()}}</a>
+=======
+                <h2 class="hover:text-white font-semibold block text-gray-200 text-2xl mb-1">{{Auth::user()->post()->count()}}</h2>
+>>>>>>> 84d3d292a27b060bfbb63dcf64d1fab86450ab8d
                 <h3 class="text-gray-300 text-lg">Posts</h3>
               </li>
               <li class="flex flex-col px-2">
