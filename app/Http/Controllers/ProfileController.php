@@ -17,7 +17,7 @@ class ProfileController extends Controller
   
   public function index()
   {
-    $userPosts = Post::where('user_id', Auth::user()->id)->get();
+    $userPosts = Post::where('user_id', Auth::user()->id)->orderBy('updated_at', 'DESC')->get();
     //dd($userPosts);
 
     return view("profile")->with('posts', $userPosts);

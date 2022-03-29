@@ -29,7 +29,7 @@
           <div class="p-4 flex flex-row text-center h-full">
             <ul class="flex flex-row justify-around">
               <li class="flex flex-col px-2">
-                <a class="hover:text-white font-semibold block text-gray-200 text-2xl mb-1">215</a>
+                <h2 class="hover:text-white font-semibold block text-gray-200 text-2xl mb-1">{{Auth::user()->post()->count()}}</h2>
                 <h3 class="text-gray-300 text-lg">Posts</h3>
               </li>
               <li class="flex flex-col px-2">
@@ -58,7 +58,7 @@
         <div id="accordion-collapse-heading-1">
           <button type="button" data-accordion-target="#accordion-collapse-body-1" aria-expanded="true"
             aria-controls="accordion-collapse-body-1"
-            class="uppercase text-xs font-extrabold px-5 py-3 rounded-3xl bg-gray-900 dark:bg-gray-800 text-gray-100 dark:text-white">
+            class="uppercase text-xs font-extrabold px-5 py-3 rounded-3xl bg-gray-800 dark:bg-gray-800 text-white dark:text-white">
             Create Post
           </button>
         </div>
