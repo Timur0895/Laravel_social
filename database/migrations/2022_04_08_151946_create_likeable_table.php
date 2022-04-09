@@ -13,11 +13,11 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('friends', function (Blueprint $table) {
-            $table->bigIncrements('id');
+        Schema::create('likeable', function (Blueprint $table) {
+            $table->id();
             $table->integer('user_id');
-            $table->integer('friend_id');
-            $table->boolean('accept')->default(0);
+            $table->integer('likeable_id');
+            $table->string('likeable_type');
             $table->timestamps();
         });
     }
@@ -29,6 +29,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('friends');
+        Schema::dropIfExists('likeable');
     }
 };

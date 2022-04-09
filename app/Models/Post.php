@@ -32,4 +32,19 @@ class Post extends Model
         ];
     }
 
+    public function likes()
+    {
+      return $this->morphMany(Like::class, 'likeable');
+    }
+
+    public function scopeNotReply($query)
+    {
+      return $query->whereNull('parent_id');
+    }
+
+    public function replies()
+    {
+      return $this->hasMany(Post::class, 'parent_id');
+    }
+
 }

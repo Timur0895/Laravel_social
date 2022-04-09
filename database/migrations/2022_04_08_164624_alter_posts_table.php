@@ -13,13 +13,9 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('friends', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->integer('user_id');
-            $table->integer('friend_id');
-            $table->boolean('accept')->default(0);
-            $table->timestamps();
-        });
+      Schema::table('posts', function (Blueprint $table) {
+        $table->integer('parent_id')->nullable();
+    });
     }
 
     /**
@@ -29,6 +25,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('friends');
+        //
     }
 };

@@ -17,7 +17,7 @@ class ProfileController extends Controller
   
   public function index()
   {
-    $userPosts = Post::where('user_id', Auth::user()->id)->orderBy('updated_at', 'DESC')->get();
+    $userPosts = Post::notReply()->where('user_id', Auth::user()->id)->orderBy('updated_at', 'DESC')->get();
     //dd($userPosts);
 
     return view("profile")->with('posts', $userPosts);
@@ -43,7 +43,6 @@ class ProfileController extends Controller
     } else {
       $newImageName = '';
     }
-    
 
     Post::create([
       'title' => $request->input('title'),
@@ -73,8 +72,8 @@ class ProfileController extends Controller
   public function edit($slug)
   {  
     return view('profile')->with([
-      'posts'=> Post::orderBy('updated_at', 'DESC')->get(),
-      'post' => Post::where('slug', $slug)->first()
+      'posts'=> Post::notReply()->where('user_id', Auth::user()->id)->orderBy('updated_at', 'DESC')->get(),
+      'post' => Post::notReply()->where('slug', $slug)->first()
     ]);
   }
 
@@ -85,7 +84,7 @@ class ProfileController extends Controller
       'description' => 'required'
     ]);
 
-    Post::where('slug', $slug)->update([
+    Post::notReply()->where('slug', $slug)->update([
         'title' => $request->input('title'),
         'description' => $request->input('description'),
         'slug' => SlugService::createSlug(Post::class, 'slug', $request->title),

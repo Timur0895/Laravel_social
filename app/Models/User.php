@@ -49,6 +49,10 @@ class User extends Authenticatable
       return $this->hasMany(Post::class)->get();
     }
 
+    public function lastPosts() {
+      return $this->hasMany(Post::class)->latest('created_at')->limit(4)->get();
+    }
+
     public function getNameAndSurname()
     {
       if ($this->name && $this->surname) {
@@ -111,7 +115,7 @@ class User extends Authenticatable
     # Принять запрос на дружбу
     public function acceptFriendRequest(User $user)
     {
-      $this->friendRequests()->where('id', $user->id)->first()->pivot()->update([
+      $this->friendRequests()->where('id', $user->id)->first()->pivot->update([
         'accept' => true
       ]);
     }
@@ -120,5 +124,22 @@ class User extends Authenticatable
     public function isFriendWith(User $user)
     {
       return (bool) $this->friends()->where('id', $user->id)->count();
+    }
+
+    # удалить друга
+    public function deleteFriend(User $user) 
+    {
+      $this->friendOf()->detach($user->id);
+      $this->myFriend()->detach($user->id);
+    }
+
+    public function hasLikedStatus(Post $post)
+    {
+      return (bool) $post->likes->where('likeable_id', $post->id)->where('likeable_type', get_class($post))->where('user_id', $this->id)->count();
+    }
+
+    public function likes()
+    {
+      return $this->hasMany(Like::class);
     }
   }
