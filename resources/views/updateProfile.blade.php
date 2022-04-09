@@ -2,16 +2,25 @@
 
 
 @section('content')
-<div id="element" class="relative bg-sky-900 w-5/6 h-screen overflow-y-auto">
+<div id="element" class="relative w-5/6 h-screen overflow-y-auto">
   <div class="flex flex-col pb-5">
     <div class="relative flex flex-col mb-7">
       <div class="flex flex-col justify-center items-center">
         <img class="w-full 2xl:h-64 h-64 shadow-lg object-cover"
-          src="{{asset('/banners/'.Auth::user()->banner_path)}}" alt="user-pic">
+          src="@if(Auth::user()->banner_path) 
+                {{asset('/banners/'.Auth::user()->banner_path)}} 
+              @else 
+                {{asset('/banners/default.jpg')}} 
+              @endif
+          " alt="user-pic">
         <div class="flex flex-row justify-between items-center w-5/6">
           <div class="flex flex-row ">
             <img class="border-4 border-gray-200 rounded-full w-48 h-48 -mt-10 shadow-xl object-cover"
-              src="{{asset('/images/'.Auth::user()->image_path)}}"
+              src="@if(Auth::user()->image_path) 
+                    {{asset('/images/'.Auth::user()->image_path)}} 
+                  @else 
+                    {{asset('/images/default.png')}} 
+                  @endif"
               alt="user-pic">
             <div class="flex flex-col justify-center items-center pl-5">
               <h1 class="font-bold text-3xl text-center my-3 text-white capitalize">{{ Auth::user()->name }} {{ Auth::user()->surname }}</h1>              
