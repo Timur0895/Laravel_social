@@ -6,7 +6,8 @@
   <div class="flex flex-col pb-5">
     <div class="relative flex flex-col mb-7">
       <div class="flex flex-col justify-center items-center">
-        <img class="w-full 2xl:h-64 h-64 shadow-lg object-cover"
+        
+        <img class="w-full 2xl:h-64 h-64 shadow-lg object-cover border-b-2" style="border-color: {{Auth::user()->messenger_color}}"
           src="@if(!isset($user))
                 @if(Auth::user()->banner_path) 
                   {{asset('/banners/'.Auth::user()->banner_path)}} 
@@ -21,8 +22,8 @@
                 @endif
               @endif" alt="user-pic">
         <div class="flex flex-row justify-between items-center w-5/6">
-          <div class="flex flex-row ">
-            <img class="border-4 border-gray-200 rounded-full w-48 h-48 -mt-10 shadow-xl object-cover"
+          <div class="flex flex-row">
+            <img class="border-4 rounded-full w-48 h-48 -mt-10 shadow-xl object-cover" style="border-color: {{Auth::user()->messenger_color}}"
               src="@if(!isset($user))
                     @if(Auth::user()->image_path) 
                       {{asset('/images/'.Auth::user()->image_path)}} 
@@ -38,16 +39,99 @@
                   @endif"
               alt="user-pic">
             <div class="flex flex-col items-center pl-5" >
-              <h1 class="font-bold text-3xl text-center my-3 capitalize" style="color: white">
+              <h1 style="color: {{Auth::user()->messenger_color}}" class="font-bold text-3xl text-center my-3 capitalize" >
                 @if (!isset($user))
                   {{ Auth::user()->name }} {{ Auth::user()->surname }}
                 @else
                   {{ $user->name }} {{ $user->surname }}  
                 @endif
-              </h1>
-              
+              </h1>              
               @if (!isset($user))
-                <a href="{{ route('editProfile') }}" class="btn btn-sm btn-info my-2 px-5 py-2">Редактировать</a>                  
+                <div class="">
+                  <a href="{{ route('editProfile') }}" class="my-2 mx-2 inline-block px-6 py-2 border-2 font-medium text-xs leading-tight uppercase rounded hover:bg-black hover:bg-opacity-5 focus:outline-none focus:ring-0 transition duration-150 ease-in-out" style="border-color: {{Auth::user()->messenger_color}}; color: {{Auth::user()->messenger_color}};">Редактировать</a> 
+                  <button type="button" class="my-2 mx-2 inline-block px-6 py-2 border-2 font-medium text-xs leading-tight uppercase rounded hover:bg-black hover:bg-opacity-5 focus:outline-none focus:ring-0 transition duration-150 ease-in-out" data-bs-toggle="modal" data-bs-target="#themes" style="border-color: {{Auth::user()->messenger_color}}; color: {{Auth::user()->messenger_color}};">
+                    Themes
+                  </button>
+                  <button type="button" class="my-2 mx-2 inline-block px-6 py-2 border-2 font-medium text-xs leading-tight uppercase rounded hover:bg-black hover:bg-opacity-5 focus:outline-none focus:ring-0 transition duration-150 ease-in-out" data-bs-toggle="modal" data-bs-target="#colors" style="border-color: {{Auth::user()->messenger_color}}; color: {{Auth::user()->messenger_color}};">
+                    Color
+                  </button>
+                </div>                
+                <div class="modal fade fixed top-0 left-0 hidden w-full h-full outline-none overflow-x-hidden overflow-y-auto" id="themes" tabindex="-1" aria-labelledby="exampleModalCenterTitle" aria-modal="true" role="dialog">
+                  <div class="modal-dialog modal-dialog-centered relative w-auto pointer-events-none">
+                    <div class="modal-content border-none shadow-lg relative flex flex-col w-full pointer-events-auto bg-clip-padding rounded-md outline-none text-current" style="{{Auth::user()->setColor}}">
+                      <div class="modal-header flex flex-shrink-0 items-center justify-between p-4 border-b border-gray-200 rounded-t-md">
+                        <h5 class="text-xl font-medium leading-normal text-gray-200" id="exampleModalScrollableLabel">
+                          Выберете тему
+                        </h5>
+                        <button type="button"
+                          class="btn-close box-content w-4 h-4 p-1 text-gray-100 border-none rounded-none opacity-50 focus:shadow-none focus:outline-none focus:opacity-100 hover:text-black hover:opacity-75 hover:no-underline"
+                          data-bs-dismiss="modal" aria-label="Close"></button>
+                      </div>
+                      <form action="{{route('setColor')}}" method="post">
+                        <div class="modal-body relative p-4">
+                          @csrf
+                          <input type="radio" name="color" class="inline-block h-12 w-12 rounded-lg" style="background: linear-gradient(to right, #e8cbc0, #636fa4);" value="background: linear-gradient(to right, #e8cbc0, #636fa4);">
+                          <input type="radio" name="color" class="inline-block h-12 w-12 rounded-lg" style="background: linear-gradient(to right, #0f2027, #203a43, #2c5364);"  value="background: linear-gradient(to right, #0f2027, #203a43, #2c5364);">
+                          <input type="radio" name="color" class="inline-block h-12 w-12 rounded-lg" style="background: linear-gradient(to right, #ffb347, #ffcc33);"  value="background: linear-gradient(to right, #ffb347, #ffcc33);">
+                          <input type="radio" name="color" class="inline-block h-12 w-12 rounded-lg" style="background: linear-gradient(to bottom, #6d6027, #d3cbb8);"  value="background: linear-gradient(to bottom, #6d6027, #d3cbb8);">
+                          <input type="radio" name="color" class="inline-block h-12 w-12 rounded-lg" style="background: linear-gradient(to right, #ff416c, #ff4b2b);"  value="background: linear-gradient(to right, #ff416c, #ff4b2b);">
+                          <input type="radio" name="color" class="inline-block h-12 w-12 rounded-lg" style="background: linear-gradient(to top, #0f0c29, #302b63, #24243e);"  value="background: linear-gradient(to top, #0f0c29, #302b63, #24243e);">
+                          <input type="radio" name="color" class="inline-block h-12 w-12 rounded-lg" style="background: linear-gradient(43deg, #7b0e81 0%, #29369e 46%, #d523f7 100%);"  value="background: linear-gradient(43deg, #7b0e81 0%, #29369e 46%, #d523f7 100%);">
+                          <input type="radio" name="color" class="inline-block h-12 w-12 rounded-lg" style="background: linear-gradient(to bottom, #000000, #0f9b0f);"  value="background: linear-gradient(to bottom, #000000, #0f9b0f);">
+                        </div>
+                        <div class="modal-footer flex flex-shrink-0 flex-wrap items-center justify-end p-4 border-t border-gray-200 rounded-b-md">
+                          <a href="/profile"
+                          class="inline-block px-6 py-2.5 bg-gray-800 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-gray-900 hover:shadow-lg focus:bg-gray-900 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-gray-900 active:shadow-lg transition duration-150 ease-in-out">
+                          Отмена
+                        </a>
+                        <button type="submit"
+                        class="inline-block px-6 py-2.5 bg-green-500 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-green-600 hover:shadow-lg focus:bg-green-600 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-green-700 active:shadow-lg transition duration-150 ease-in-out"
+                        data-bs-dismiss="modal">
+                        Сохранить
+                        </button>
+                      </form>
+                    </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="modal fade fixed top-0 left-0 hidden w-full h-full outline-none overflow-x-hidden overflow-y-auto" id="colors" tabindex="-1" aria-labelledby="exampleModalCenterTitle" aria-modal="true" role="dialog">
+                  <div class="modal-dialog modal-dialog-centered relative w-auto pointer-events-none">
+                    <div class="modal-content border-none shadow-lg relative flex flex-col w-full pointer-events-auto bg-clip-padding rounded-md outline-none text-current" style="{{Auth::user()->setColor}}">
+                      <div class="modal-header flex flex-shrink-0 items-center justify-between p-4 border-b border-gray-200 rounded-t-md">
+                        <h5 class="text-xl font-medium leading-normal text-gray-200" id="exampleModalScrollableLabel">
+                          Выберете цвет
+                        </h5>
+                        <button type="button"
+                          class="btn-close box-content w-4 h-4 p-1 text-black border-none rounded-none opacity-50 focus:shadow-none focus:outline-none focus:opacity-100 hover:text-black hover:opacity-75 hover:no-underline"
+                          data-bs-dismiss="modal" aria-label="Close"></button>
+                      </div>
+                      <form action="{{route('textColor')}}" method="post">
+                        <div class="modal-body relative p-4">
+                          @csrf
+                          <input type="radio" name="color" class="inline-block h-12 w-12 rounded-lg" style="background: #dff9fb" value="#dff9fb">
+                          <input type="radio" name="color" class="inline-block h-12 w-12 rounded-lg" style="background: #eb4d4b"  value="#eb4d4b">
+                          <input type="radio" name="color" class="inline-block h-12 w-12 rounded-lg" style="background: #535c68"  value="#535c68">
+                          <input type="radio" name="color" class="inline-block h-12 w-12 rounded-lg" style="background: #f6e58d"  value="#f6e58d">
+                          <input type="radio" name="color" class="inline-block h-12 w-12 rounded-lg" style="background: #3c40c6"  value="#3c40c6">
+                          <input type="radio" name="color" class="inline-block h-12 w-12 rounded-lg" style="background: #0be881"  value="#0be881">
+                          <input type="radio" name="color" class="inline-block h-12 w-12 rounded-lg" style="background: #1e272e"  value="#1e272e">
+                          <input type="radio" name="color" class="inline-block h-12 w-12 rounded-lg" style="background: #cd84f1"  value="#cd84f1">
+                        </div>
+                        <div class="modal-footer flex flex-shrink-0 flex-wrap items-center justify-end p-4 border-t border-gray-200 rounded-b-md">
+                          <a href="/profile"
+                          class="inline-block px-6 py-2.5 bg-gray-800 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-gray-900 hover:shadow-lg focus:bg-gray-900 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-gray-900 active:shadow-lg transition duration-150 ease-in-out">
+                          Отмена
+                        </a>
+                        <button type="submit"
+                        class="inline-block px-6 py-2.5 bg-green-500 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-green-600 hover:shadow-lg focus:bg-green-600 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-green-700 active:shadow-lg transition duration-150 ease-in-out"
+                        data-bs-dismiss="modal">
+                        Сохранить
+                        </button>
+                      </form>
+                    </div>
+                    </div>
+                  </div>
+                </div>
               @else
                 @if (!$user->friends()->count())
                   <div class="flex items-center justify-between w-64">
@@ -81,7 +165,7 @@
                   @if (!isset($user))
                     {{$posts->count()}}
                   @else
-                    {{$user->post()->count()}}
+                    {{$user->post()->where('parent_id', null)->count()}}
                   @endif
                 </a>
                 <h3 class="text-gray-300 text-lg">Posts</h3>
@@ -132,7 +216,7 @@
         @endif">
         <div id="accordion-collapse-heading-1">
           <button type="button" data-bs-toggle="collapse" data-bs-target="#collapseForm" aria-expanded="false" aria-controls="collapseFrom"
-            class="uppercase text-xs font-extrabold px-5 py-3 rounded-3xl bg-gray-800 dark:bg-gray-800 text-white dark:text-white">
+            class="uppercase text-xs font-extrabold px-5 py-3 rounded-3xl bg-gray-800 dark:bg-gray-800" style="color: {{Auth::user()->messenger_color}}">
             Create Post
           </button>
         </div>
@@ -230,11 +314,11 @@
                       <!-- end timeline-time -->
                       <!-- begin timeline-icon -->
                       <div class="timeline-icon">
-                        <a href="javascript:;">&nbsp;</a>
+                        <a href="javascript:;" style="border-color: {{Auth::user()->messenger_color}};">&nbsp;</a>
                       </div>
                       <!-- end timeline-icon -->
                       <!-- begin timeline-body -->
-                      <div class="timeline-body">
+                      <div class="timeline-body border-2" style="border-color: {{Auth::user()->messenger_color}};">
                         <div class="timeline-header flex justify-start items-center flex-row ">
                           <span class="mr-4">
                             @if(Auth::user()->image_path)
@@ -289,22 +373,32 @@
                               <div class="timeline-comment-box items-center flex">
                                 <div class="user">
                                   <img src="
+                                  @if(Auth::user()->id == $reply->user->id) 
                                     @if(Auth::user()->image_path) 
                                       {{asset('/images/'.Auth::user()->image_path)}} 
                                     @else 
                                       {{asset('/images/default.png')}} 
-                                    @endif" class="border-4 border-gray-200 rounded-full w-14 h-14 shadow-xl object-cover">
+                                    @endif
+                                  @else 
+                                    @if($reply->user->image_path) 
+                                      {{asset('/images/'.$reply->user->image_path)}} 
+                                    @else 
+                                      {{asset('/images/default.png')}} 
+                                    @endif
+                                  @endif" class="border-4 border-gray-200 rounded-full w-14 h-14 shadow-xl object-cover">
                                 </div>
                                 <div class="input flex items-center justify-between w-full">
                                   <h1>{{$reply->description}}</h1>
                                   <div class="flex flex-col items-center">
                                     <h1 class="mb-2">{{$reply->created_at->diffForHumans()}}</h1>
-                                    <form action="{{route('deleteReply', ['statusId' => $reply->id])}}" method="post">
-                                      @csrf
-                                      <button class="m-r-15 text-inverse-lighter" type="submit">
-                                        <i class="fa-solid fa-trash fa-fw fa-lg text-red-700"></i>
-                                      </button>
-                                    </form>
+                                    @if (Auth::user()->id == $reply->user->id)
+                                      <form action="{{route('deleteReply', ['statusId' => $reply->id])}}" method="post">
+                                        @csrf
+                                        <button class="m-r-15 text-inverse-lighter" type="submit">
+                                          <i class="fa-solid fa-trash fa-fw fa-lg text-red-700"></i>
+                                        </button>
+                                      </form>
+                                    @endif
                                   </div>
                                 </div>
                             @endforeach
@@ -336,7 +430,7 @@
                     </li>
                   @endforeach
                 @else
-                  @foreach ($user->post() as $post)
+                  @foreach ($user->post()->where('parent_id', null) as $post)
                     <li>
                       <!-- begin timeline-time -->
                       <div class="timeline-time top-9">
@@ -345,14 +439,13 @@
                       <!-- end timeline-time -->
                       <!-- begin timeline-icon -->
                       <div class="timeline-icon">
-                        <a href="javascript:;">&nbsp;</a>
+                        <a href="javascript:;" style="border-color: {{Auth::user()->messenger_color}};">&nbsp;</a>
                       </div>
                       <!-- end timeline-icon -->
                       <!-- begin timeline-body -->
-                      <div class="timeline-body">
+                      <div class="timeline-body border-2" style="border-color: {{Auth::user()->messenger_color}};">
                         <div class="timeline-header flex justify-start items-center flex-row ">
                           <span class="mr-4">
-                            
                               <img class="border-4 border-gray-200 rounded-full w-16 h-16 shadow-xl object-cover" 
                               src="
                               @if($user->image_path) 
@@ -384,9 +477,18 @@
                         </div>
                         <div class="timeline-footer flex">
                           @if ($post->user->id !== Auth::user()->id)
-                            <a href="{{ route('getLike', ['statusId' => $post->id]) }}" class="m-r-15 text-inverse-lighter mr-2">                              
-                                <i class="fa fa-thumbs-up fa-fw fa-xl m-r-3 @if($post->likes->count()) text-blue-500 @endif text-gray-800 hover:text-blue-500" ></i>
-                            </a>                             
+                            @if ($post->likes->count())
+                              <form action="{{ route('deleteLike', ['statusId' => $post->id]) }}" method="post">
+                                @csrf
+                                <button type="submit" class="m-r-15 text-inverse-lighter mr-2">                              
+                                  <i class="fa fa-thumbs-up fa-fw fa-xl m-r-3 text-blue-500 hover:text-gray-600" ></i>
+                                </button>
+                              </form>
+                            @else
+                              <a href="{{ route('getLike', ['statusId' => $post->id]) }}" class="m-r-15 text-inverse-lighter mr-2">                              
+                                <i class="fa fa-thumbs-up fa-fw fa-xl m-r-3 text-gray-600 hover:text-blue-500" ></i>
+                              </a>                             
+                            @endif
                           @endif
                           <button type="button" data-bs-toggle="collapse" data-bs-target="#collapseComments-{{$post->id}}" aria-expanded="false" aria-controls="collapseComments-{{$post->id}}"
                           class="m-r-15 text-inverse-lighter mr-2 text-gray-600 hover:text-gray-800">
@@ -400,22 +502,28 @@
                             <div class="timeline-comment-box items-center flex">
                               <div class="user">
                                 <img src="
-                                  @if(Auth::user()->image_path) 
-                                    {{asset('/images/'.Auth::user()->image_path)}} 
+                                  @if(Auth::user()->id == $reply->user->id) 
+                                    @if(Auth::user()->image_path) 
+                                      {{asset('/images/'.Auth::user()->image_path)}} 
+                                    @else 
+                                      {{asset('/images/default.png')}} 
+                                    @endif
                                   @else 
-                                    {{asset('/images/default.png')}} 
+                                    {{asset('/images/'.$user->image_path)}}
                                   @endif" class="border-4 border-gray-200 rounded-full w-12 h-12 shadow-xl object-cover">
                               </div>
                               <div class="input flex items-center justify-between w-full">
                                 <h1>{{$reply->description}}</h1>
                                 <div class="flex flex-col items-center">
                                   <h1 class="mb-2">{{$reply->created_at->diffForHumans()}}</h1>
-                                  <form action="{{route('deleteReply', ['statusId' => $reply->id])}}" method="post">
-                                    @csrf
-                                    <button class="m-r-15 text-inverse-lighter" type="submit">
-                                      <i class="fa-solid fa-trash fa-fw fa-lg text-red-700"></i>
-                                    </button>
-                                  </form>
+                                  @if (Auth::user()->id == $reply->user->id)
+                                      <form action="{{route('deleteReply', ['statusId' => $reply->id])}}" method="post">
+                                        @csrf
+                                        <button class="m-r-15 text-inverse-lighter" type="submit">
+                                          <i class="fa-solid fa-trash fa-fw fa-lg text-red-700"></i>
+                                        </button>
+                                      </form>
+                                    @endif                                  
                                 </div>
                               </div>
                             </div>
@@ -450,11 +558,11 @@
                 <li>
                   <!-- begin timeline-icon -->
                   <div class="timeline-icon">
-                    <a href="javascript:;">&nbsp;</a>
+                    <a href="javascript:;" style="border-color: {{Auth::user()->messenger_color}};">&nbsp;</a>
                   </div>
                   <!-- end timeline-icon -->
                   <!-- begin timeline-body -->
-                  <div class="timeline-body">
+                  <div class="timeline-body border-2" style="border-color: {{Auth::user()->messenger_color}};">
                     Loading...
                   </div>
                   <!-- begin timeline-body -->

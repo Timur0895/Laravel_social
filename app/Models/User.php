@@ -6,6 +6,7 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Auth;
 use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
@@ -23,7 +24,9 @@ class User extends Authenticatable
         'email',
         'password',
         'image_path',
-        'banner_path'
+        'banner_path',
+        'setColor',
+        'messenger_color'
     ];
 
     /**
@@ -46,11 +49,19 @@ class User extends Authenticatable
     ];
 
     public function post() {
-      return $this->hasMany(Post::class)->get();
+      return $this->hasMany(Post::class)->orderBy('updated_at', 'DESC')->get();
     }
 
     public function lastPosts() {
       return $this->hasMany(Post::class)->latest('created_at')->limit(4)->get();
+    }
+
+    public function favorites() {
+      return $this->hasMany(ChFavorite::class)->get();
+    }
+
+    public function dialogs() {
+      return $this->hasMany(ChMessage::class, 'from_id')->get();
     }
 
     public function getNameAndSurname()

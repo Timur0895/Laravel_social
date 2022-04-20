@@ -16,16 +16,22 @@ class UpdateProfileController extends Controller
   }
 
   public function profile() {
-    return view('updateProfile', ['user' => Auth::user()]);
+
+    $userPosts = Post::notReply()->where('user_id', Auth::user()->id)->orderBy('updated_at', 'DESC')->get();
+
+    return view('updateProfile', [
+      'user' => Auth::user(),
+      'posts' => $userPosts
+    ]);
   }
 
   public function update(Request $request) {
 
-    //dd($request->hasFile('banner'));
+    //dd($request);
     $user = Auth::user();
 
     if ($request->isMethod('post')) {
-      $this->validate($request, $this->validateRules(), $this->attributeNames());
+      $this->validate($request, $this->validateRules());
 
       if($request->hasFile('banner')){
         $avatar = $request->file('banner');
@@ -44,18 +50,19 @@ class UpdateProfileController extends Controller
       }
       
       //dd(Hash::check($request->post('password'), $user->password));
-      if (Hash::check($request->post('password'), $user->password)) {
+      /*if (Hash::check($request->post('password'), $user->password)) {
         //dd(Hash::check($request->post('password'), $user->password));
-        $user->fill([
-            'name' => $request->post('name'),
-            'email' => $request->post('email'),
-            'password' => Hash::make($request->post('newPassword')),
-            'surname' => $request->post('surname'),
-        ])->save();
+        
         //dd($user);                  
       } else {
         redirect('/home');
-      }
+      }*/
+      $user->update([
+        'name' => $request->post('name'),
+        'email' => $request->post('email'),
+        'surname' => $request->post('surname'),
+      ]);
+      //dd($user);
     }
     //dd($user);
     return redirect('profile')->with([
@@ -105,19 +112,12 @@ class UpdateProfileController extends Controller
   {
     return [
       'surname' => 'string|max:15',
-      'name' => 'required|string|max:15',
-      'email' => 'required|email|unique:users,email,' . Auth::id(),
-      'password' => 'required',
-      'newPassword' => 'required|string|min:3|confirmed',
+      'name' => 'string|max:15',
+      'email' => 'email|unique:users,email,' . Auth::id(),
       'image' => 'mimes:jpg,png,jpeg|max:5048',
       'banner' => 'mimes:jpg,png,jpeg|max:5048'
     ];
   }
 
-    protected function attributeNames()
-    {
-        return [
-            'newPassword' => 'Новый пароль'
-        ];
-    }
+    
 }

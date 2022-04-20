@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Like;
 use App\Models\Post;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -67,5 +68,18 @@ class StatusController extends Controller
     $post->likes()->create(['user_id' => Auth::user()->id]);
 
     return redirect()->back();
+  }
+
+  public function deleteLike($statusId)
+  {
+    //dd($statusId);
+
+    $post = Like::where('likeable_id', $statusId);
+
+    //dd($post);
+
+    $post->delete();
+
+    return back();
   }
 }

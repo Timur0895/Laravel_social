@@ -9,6 +9,11 @@ module.exports = {
     container: {
       center: true,
       padding: '5rem',
+    },
+    extend: {
+      colors: {
+        'oranges': 'linear-gradient(to right, #ffb347, #ffcc33)',
+      },
     }
   },
   plugins: [

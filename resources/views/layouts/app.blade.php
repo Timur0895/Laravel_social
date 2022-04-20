@@ -19,15 +19,25 @@
   <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
 
   <!-- Styles -->
-  <!-- Style Switcher -->
-  <link rel="stylesheet" href="/css/skins/color-1.css" class="alternate-style" title="color-1">
-  <link rel="stylesheet" href="/css/skins/color-2.css" class="alternate-style" title="color-2" disabled="true">
-  <link rel="stylesheet" href="/css/skins/color-3.css" class="alternate-style" title="color-3" disabled="true">
-  <link rel="stylesheet" href="/css/skins/color-4.css" class="alternate-style" title="color-4" disabled="true">
-  <link rel="stylesheet" href="/css/skins/color-5.css" class="alternate-style" title="color-5" disabled="true">
-  <link rel="stylesheet" href="/css/skins/color-6.css" class="alternate-style" title="color-6" disabled="true">
-  <link rel="stylesheet" href="/css/skins/color-7.css" class="alternate-style" title="color-7" disabled="true">
-  <link rel="stylesheet" href="/css/skins/color-8.css" class="alternate-style" title="color-8" disabled="true">
+  <link rel='stylesheet' href='https://unpkg.com/nprogress@0.2.0/nprogress.css'/>
+  <link href="{{ asset('css/chatify/dark.mode.css') }}" rel="stylesheet" />
+  @auth
+    <style>
+
+      .timeline::before{
+        background: {{Auth::user()->messenger_color}} !important;
+      }
+
+      .timeline .timeline-body:before{
+        border-right-color: {{Auth::user()->messenger_color}} !important;
+      }
+
+      #element::-webkit-scrollbar-thumb{
+        background-color: {{Auth::user()->messenger_color}} !important;
+      }
+
+    </style>      
+  @endauth
   <link rel="stylesheet" href="https://unpkg.com/flowbite@1.4.1/dist/flowbite.min.css" />
   <link href="{{ asset('css/app.css') }}" rel="stylesheet">
   <script defer src="{{ asset('js/index.js') }}"></script>
@@ -68,19 +78,6 @@
         </div>
         <div class="bg-yellow-200 h-36">
           <div class="w-full justify-around flex items-center flex-row">
-            <div class="style-switcher ">
-              <h2 class="capitalize pt-2 text-center">Выберете тему оформления</h2>
-              <div class="colors grid grid-cols-4 gap-2 p-2">
-                <span class="color-1 inline-block h-12 w-12 border-2 border-white rounded-lg" onclick="setActiveStyle('color-1')"></span>
-                <span class="color-2 inline-block h-12 w-12 border-2 border-white rounded-lg" onclick="setActiveStyle('color-2')"></span>
-                <span class="color-3 inline-block h-12 w-12 border-2 border-white rounded-lg" onclick="setActiveStyle('color-3')"></span>
-                <span class="color-4 inline-block h-12 w-12 border-2 border-white rounded-lg" onclick="setActiveStyle('color-4')"></span>
-                <span class="color-5 inline-block h-12 w-12 border-2 border-white rounded-lg" onclick="setActiveStyle('color-5')"></span>
-                <span class="color-6 inline-block h-12 w-12 border-2 border-white rounded-lg" onclick="setActiveStyle('color-6')"></span>
-                <span class="color-7 inline-block h-12 w-12 border-2 border-white rounded-lg" onclick="setActiveStyle('color-7')"></span>
-                <span class="color-8 inline-block h-12 w-12 border-2 border-white rounded-lg" onclick="setActiveStyle('color-8')"></span>
-              </div>
-            </div>
           </div>
         </div>
         <div class="bg-blue-200 h-2/3 justify-center flex items-center flex-col">
@@ -99,7 +96,7 @@
             <li><a href="/">Home</a></li>
             <li><a href="{{ route("friends") }}">Friends</a></li>
             <li><a href="{{ route("news") }}">News</a></li>
-            <li><a href="{{ route("chat") }}">Chat</a></li>
+            <li><a href="{{ route("chatify") }}">Chat</a></li>
             <li><a href="/profile">Profile</a></li>
           </ul>
         </div>
@@ -137,7 +134,21 @@
         </div>
       </div>
       @endif
-      <div style="background: var(--skin-color);">
+      <div style="
+      @guest
+        background: gray;
+      @else
+        @if(!isset($user))
+          {{Auth::user()->setColor}}
+        @else
+          @if(!$user->friends()->count())
+            {{Auth::user()->setColor}}
+          @else
+            {{$user->setColor}}
+          @endif
+        @endif
+      @endguest
+      ">
         @yield('content')
       </div>
     </main>

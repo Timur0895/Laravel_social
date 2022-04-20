@@ -76,7 +76,7 @@ class FriendsController extends Controller
   public function getProfile($usermail)
   {
     $userProfile = User::where('email', $usermail)->first();
-    //dd($userProfile);
+    //dd($userProfile->post()->where('parent_id', null));
 
     return view('profile')->with('user', $userProfile);
   }

@@ -1,7 +1,14 @@
 @extends('layouts.app')
 
 @section('content')
-  <div id="element" class="relative w-5/6 h-screen overflow-y-auto">
+  <div id="element" class="relative w-5/6 h-screen overflow-y-auto" 
+      style="
+          @if(!isset($user))
+            {{Auth::user()->setColor}}
+          @else
+            {{$user->setColor}}
+          @endif
+  ">
     <div class="container mx-auto my-4 text-gray-100">
       <h1 class="mb-4 text-3xl">Результаты поиска: "{{Request::input('search')}}"</h1>
       @if (!$users->count())

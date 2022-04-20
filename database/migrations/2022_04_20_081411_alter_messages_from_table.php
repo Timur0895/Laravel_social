@@ -13,8 +13,9 @@ return new class extends Migration
      */
     public function up()
     {
-      Schema::table('posts', function (Blueprint $table) {
-        $table->integer('parent_id')->nullable();
+      Schema::table('ch_messages', function (Blueprint $table) {
+        $table->unsignedBigInteger('from_id')->change();
+        $table->foreign('from_id')->references('id')->on('users')->change();
     });
     }
 
@@ -25,6 +26,8 @@ return new class extends Migration
      */
     public function down()
     {
-        //
+        Schema::table('table', function (Blueprint $table) {
+            //
+        });
     }
 };

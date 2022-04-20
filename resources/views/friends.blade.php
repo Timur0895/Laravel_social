@@ -10,9 +10,9 @@
       </p>
     </div>
     @endif
-    <div class="container w-full px-3 my-2 flex-row flex">
-      <div class="w-3/4 py-4 px-4">
-        <h1 class="text-center font-bold text-3xl text-white px-2">Your Friends</h1>
+    <div class="container w-full px-3 flex-row flex">
+      <div class="w-3/4 py-2 px-4">
+        <h1 class="text-center font-bold text-3xl px-2" style="color: {{Auth::user()->messenger_color}}">Друзья</h1>
         <div class="my-3">
           @if (!$friends->count())
             <p>
@@ -22,7 +22,7 @@
             </p>
           @else        
             @foreach ($friends as $friend)              
-                <div class="timeline-body rounded-xl p-2 mb-3" style="background: white;!important">
+                <div class="timeline-body rounded-xl p-2 mb-3 border-2" style="background: white; border-color: {{Auth::user()->messenger_color}}">
                   <div class="timeline-header flex justify-start items-center flex-row ">
                     <span class="mr-4">
                       <a href="{{route('getProfile', ['usermail' => $friend->email])}}">
@@ -37,16 +37,16 @@
                     <h3 class="my-3 text-xl capitalize"><a href="{{route('getProfile', ['usermail' => $friend->email])}}">{{$friend->getNameAndSurname()}}</a></h3>
                       <small></small></span>
                   </div>
-                  <div class="timeline-content w-full">                    
+                  <div class="timeline-content h-48 w-full">                    
                     @if (!$friend->post()->count())
                       <div class="p-2 h-40 flex justify-center items-center border-2 border-gray-200 rounded-xl">
                         <h1>У {{$friend->getNameAndSurname()}} нет постов</h1>
                       </div>
                     @else
-                      <div class="p-3 h-64 grid  grid-cols-4 gap-2">
-                        @foreach ($friend->lastPosts() as $post)
-                          <div class="p-2 flex flex-col items-center border-2 border-gray-200 rounded-xl">
-                            <img class="h-full w-full rounded-xl" 
+                      <div class="p-3 flex flex-row">
+                        @foreach ($friend->lastPosts()->where('parent_id', null) as $post)
+                          <div class="p-2 flex flex-col items-center border-2 border-gray-200 rounded-xl h-44">
+                            <img class="h-32 w-32 rounded-xl" 
                               src="@if($post->image_path)
                                 {{asset('images/'. $post->image_path)}}
                               @else
@@ -64,9 +64,9 @@
           @endif
         </div>
       </div>
-      <div class="w-1/4 flex flex-col py-4 px-3">
-        <h1 class="text-center font-bold text-3xl text-white px-2">Requests</h1>
-        <div class="flex flex-col rounded-xl p-2 my-3" style="background: white; !important">
+      <div class="w-1/4 flex flex-col py-2 px-3">
+        <h1 class="text-center font-bold text-3xl px-2" style="color: {{Auth::user()->messenger_color}}">Запросы</h1>
+        <div class="flex flex-col rounded-xl p-2 my-3 border-2" style="background: white; border-color: {{Auth::user()->messenger_color}}">
           @if (!$requests->count()) 
             <div class="p-2 h-full flex justify-center items-center text-black">
               <h1>Запросов нет</h1>
