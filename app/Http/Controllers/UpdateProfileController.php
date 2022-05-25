@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
 use App\Models\Post;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -18,10 +19,12 @@ class UpdateProfileController extends Controller
   public function profile() {
 
     $userPosts = Post::notReply()->where('user_id', Auth::user()->id)->orderBy('updated_at', 'DESC')->get();
+    $categories = Category::all();
 
     return view('updateProfile', [
       'user' => Auth::user(),
-      'posts' => $userPosts
+      'posts' => $userPosts,
+      'categories' => $categories
     ]);
   }
 

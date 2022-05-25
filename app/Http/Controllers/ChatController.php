@@ -5,33 +5,38 @@ namespace App\Http\Controllers;
 use App\Models\ChFavorite;
 use App\Models\ChMessage;
 use App\Models\User;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 
 class ChatController extends Controller
 {
   public function index() {
+
+    $lastMessage = ChMessage::all()->last();
+
+    $friends = Auth::user()->friends();
     return view("vendor.Chatify.pages.app", [
-      'friends' => Auth::user()->friends(),
+      'friends' => $friends,
+      'lastMessage' => $lastMessage 
     ]);
   }
 
   public function chatProfile($id)
   {
     //dd($id);
-    $myMessages = ChMessage::all()->where('from_id', Auth::user()->id)->where('to_id', $id);
-    $toMeMessages = ChMessage::all()->where('from_id', $id)->where('to_id', Auth::user()->id);
+    //$myMessages = ChMessage::all()->where('from_id', Auth::user()->id)->where('to_id', $id);
+    //$toMeMessages = ChMessage::all()->where('from_id', $id)->where('to_id', Auth::user()->id);
     $messages = ChMessage::query()->where('from_id', Auth::user()->id)->orWhere('to_id', Auth::user()->id)->orderBy('created_at', 'DESC')->get();
 
-    //dd($toMeMessages);
+    //dd($messages->where('from_id', $id));
     
-    foreach ($toMeMessages as $message) {
+    foreach ($messages->where('from_id', $id) as $message) {
       $message->update([
         'seen' => 1
-      ]);      
+      ]);     
     }
+
+    $lastMessage = ChMessage::all()->last();
 
     $favorite = Auth::user()->favorites()->where('favorite_id', $id)->first();//ChFavorite::all()->where('favorite_id', $id);
     
@@ -44,8 +49,8 @@ class ChatController extends Controller
       'user' => $user,
       'friends' => Auth::user()->friends(),
       'messages' => $messages,
-      'myMessages' => $myMessages,
-      'favorite' => $favorite
+      'favorite' => $favorite,
+      'lastMessage' => $lastMessage 
     ]);
   }
 
@@ -101,11 +106,17 @@ class ChatController extends Controller
       ]);
     }
 
+    if ($favorite) {
+      $message = "Удален из избранного";
+    } else {
+      $message = "Добавлен в избранное";
+    };
+    
     //dd($favorite);
 
     //dd($user);
 
-    return back();
+    return back()->with('message', $message);
   }
 
   public function deleteDialog($id)
@@ -118,6 +129,6 @@ class ChatController extends Controller
     $dialog->each->delete();
 
     //dd($userMessages);
-    return back();
+    return back()->with('message', "Диалог удален!");
   }
 }

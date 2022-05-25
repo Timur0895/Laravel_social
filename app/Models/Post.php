@@ -16,7 +16,8 @@ class Post extends Model
         'slug',
         'description',
         'image_path',
-        'user_id'
+        'user_id',
+        'category_id'
     ];
 
     public function user() {
@@ -45,6 +46,11 @@ class Post extends Model
     public function replies()
     {
       return $this->hasMany(Post::class, 'parent_id');
+    }
+
+    public function categories()
+    {
+      return $this->belongsToMany(Category::class, 'category_item');
     }
 
 }

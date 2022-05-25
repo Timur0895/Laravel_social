@@ -108,7 +108,7 @@
                       <form action="{{route('textColor')}}" method="post">
                         <div class="modal-body relative p-4">
                           @csrf
-                          <input type="radio" name="color" class="inline-block h-12 w-12 rounded-lg" style="background: #dff9fb" value="#dff9fb">
+                          <input type="radio" name="color" class="inline-block h-12 w-12 rounded-lg" style="background: #dff9fb !important" value="#dff9fb">
                           <input type="radio" name="color" class="inline-block h-12 w-12 rounded-lg" style="background: #eb4d4b"  value="#eb4d4b">
                           <input type="radio" name="color" class="inline-block h-12 w-12 rounded-lg" style="background: #535c68"  value="#535c68">
                           <input type="radio" name="color" class="inline-block h-12 w-12 rounded-lg" style="background: #f6e58d"  value="#f6e58d">
@@ -133,7 +133,7 @@
                   </div>
                 </div>
               @else
-                @if (!$user->friends()->count())
+                @if (!Auth::user()->isFriendWith($user))
                   <div class="flex items-center justify-between w-64">
                     <h1 class="mx-2 font-medium text-xl text-white">Добавить в друзья</h1>
                     <a class="text-2xl font-semibold text-gray-100 hover:bg-sky-900 bg-sky-800 py-1 px-2 hover:text-white" href="{{ route('addFriend', ['usermail' => $user->email]) }}"><i class="fa fa-user-plus fa-fw"></i></a>
@@ -237,7 +237,7 @@
               <ul class="timeline">
                 <form 
                   @if (isset($post))
-                    action="/profile/{{$post->slug}}"
+                    action="/profile/{{$post->id}}"
                   @else
                     action="/profile"
                   @endif  class=
@@ -279,7 +279,12 @@
                           placeholder="{{old('description', $post->description)}}"
                         @else
                           placeholder="Ваш пост ... "  
-                        @endif></textarea>
+                        @endif>
+                      </textarea>
+                      <div class="w-full mt-2 rounded-xl">
+                        @include('layouts.select')
+                      </div>
+                      
                     </div>
                     <div class="timeline-footer flex flex-row">
                       <a href="javascript:;" class="m-r-15 text-inverse-lighter flex mr-6">
@@ -319,14 +324,28 @@
                       <!-- end timeline-icon -->
                       <!-- begin timeline-body -->
                       <div class="timeline-body border-2" style="border-color: {{Auth::user()->messenger_color}};">
-                        <div class="timeline-header flex justify-start items-center flex-row ">
-                          <span class="mr-4">
-                            @if(Auth::user()->image_path)
-                              <img class="border-4 border-gray-200 rounded-full w-16 h-16 shadow-xl object-cover" src="{{asset('/images/'.Auth::user()->image_path)}}" alt="profile_image" >
-                            @endif
-                          </span>
-                          <span class="username capitalize"><a href="javascript:;">{{ Auth::user()->name }}</a>
-                            <small></small></span>
+                        <div class="timeline-header flex flex-row justify-between">
+                          <div class="flex justify-start items-center flex-row ">
+                            <span class="mr-4">
+                              @if(Auth::user()->image_path)
+                                <img class="border-4 border-gray-200 rounded-full w-16 h-16 shadow-xl object-cover" src="{{asset('/images/'.Auth::user()->image_path)}}" alt="profile_image" >
+                              @endif
+                            </span>
+                            <span class="username capitalize"><a href="javascript:;">{{ Auth::user()->name }}</a>
+                              <small></small></span>
+                          </div>
+                          <div class="flex flex-row items-center">
+                            @foreach ($post->categories as $item)
+                            <form action="{{route('getCategory', ['category' => $item->slug])}}" method="get">
+                              @csrf
+                              <button type="submit">
+                                <span class="ml-1 px-3 py-2 rounded-full text-gray-500 bg-gray-200 font-semibold text-center text-sm flex align-center w-max cursor-pointer active:bg-gray-300 transition duration-300 ease">
+                                  #{{$item->slug}}
+                                </span>
+                              </button>
+                            </form>
+                            @endforeach
+                          </div>
                         </div>
                         <div class="timeline-content w-full">
                           <h3 class="px-2 text-2xl border-b-2 mb-15 border-gray-200 pb-3">{{ $post->title }}</h3>
@@ -342,6 +361,7 @@
                         <div class="timeline-likes">
                           <div class="stats-right">
                             <span class="stats-text">{{$post->replies->count()}} Comments</span>
+                            <span class="stats-text">{{$post->likes->count()}} Likes</span>
                           </div>
                         </div>
                         <div class="timeline-footer flex">
@@ -367,12 +387,12 @@
                               </form>
                           @endif
                         </div>
+                        @foreach ($post->replies as $reply)
                         <div class="collapse" id="collapseComments-{{$post->id}}">
                           <div class="block bg-white">
-                            @foreach ($post->replies as $reply)
-                              <div class="timeline-comment-box items-center flex">
-                                <div class="user">
-                                  <img src="
+                            <div class="timeline-comment-box items-center flex">
+                              <div class="user">
+                                <img src="
                                   @if(Auth::user()->id == $reply->user->id) 
                                     @if(Auth::user()->image_path) 
                                       {{asset('/images/'.Auth::user()->image_path)}} 
@@ -400,10 +420,11 @@
                                       </form>
                                     @endif
                                   </div>
-                                </div>
-                            @endforeach
+                              </div>
+                            </div>
                           </div>
                         </div>
+                        @endforeach
                         <div class="timeline-comment-box">
                           <div class="user">
                             <img src="
@@ -444,8 +465,10 @@
                       <!-- end timeline-icon -->
                       <!-- begin timeline-body -->
                       <div class="timeline-body border-2" style="border-color: {{Auth::user()->messenger_color}};">
-                        <div class="timeline-header flex justify-start items-center flex-row ">
-                          <span class="mr-4">
+                        
+                        <div class="timeline-header flex flex-row justify-between">
+                          <div class="flex justify-start items-center flex-row ">
+                            <span class="mr-4">
                               <img class="border-4 border-gray-200 rounded-full w-16 h-16 shadow-xl object-cover" 
                               src="
                               @if($user->image_path) 
@@ -455,8 +478,21 @@
                               @endif" alt="profile_image" >
                             
                           </span>
-                          <span class="username capitalize"><a href="javascript:;">{{ $user->name }}</a>
-                            <small></small></span>
+                            <span class="username capitalize"><a href="javascript:;">{{ $user->name }}</a>
+                              <small></small></span>
+                          </div>
+                          <div class="flex flex-row items-center">
+                            @foreach ($post->categories as $item)
+                            <form action="{{route('getCategory', ['category' => $item->slug])}}" method="get">
+                              @csrf
+                              <button type="submit">
+                                <span class="ml-1 px-3 py-2 rounded-full text-gray-500 bg-gray-200 font-semibold text-center text-sm flex align-center w-max cursor-pointer active:bg-gray-300 transition duration-300 ease">
+                                  #{{$item->slug}}
+                                </span>
+                              </button>
+                            </form>
+                            @endforeach
+                          </div>
                         </div>
                         <div class="timeline-content w-full">
                           <h3 class="px-2 text-2xl border-b-2 mb-15 border-gray-200 pb-3">{{ $post->title }}</h3>
@@ -562,7 +598,10 @@
                   </div>
                   <!-- end timeline-icon -->
                   <!-- begin timeline-body -->
-                  <div class="timeline-body border-2" style="border-color: {{Auth::user()->messenger_color}};">
+                  <div class="timeline-body border-2 flex justify-center items-center" style="border-color: {{Auth::user()->messenger_color}};">
+                    <div class="spinner-border animate-spin inline-block w-8 h-8 border-3 rounded-full mr-2" style="color: {{Auth::user()->messenger_color}};" role="status">
+                      <span class="visually-hidden">Loading...</span>
+                    </div>
                     Loading...
                   </div>
                   <!-- begin timeline-body -->

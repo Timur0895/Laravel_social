@@ -11,8 +11,6 @@
           {{-- header buttons --}}
             
         </nav>
-        {{-- Search input --}}
-        <input type="text" class="messenger-search show" placeholder="Поиск" />
         {{-- Tabs --}}
         <div class="messenger-listView-tabs">
           <a href="#"  data-view="users" style="color: {{Auth::user()->messenger_color}}"><span class="far fa-user"></span> Люди</a>
@@ -22,7 +20,7 @@
       <div class="m-body contacts-container border-r-2" style="border-color: {{Auth::user()->messenger_color}}">
         {{-- Lists [Users/Group] --}}
         {{-- ---------------- [ User Tab ] ---------------- --}}
-        <div class=" messenger-tab users-tab app-scroll block" data-view="users">
+        <div class="messenger-tab users-tab app-scroll block" data-view="users">
           {{-- Favorites --}}
           @if (Auth::user()->favorites()->count())
             <div class="favorites-section border-b-2" style="border-color: {{Auth::user()->messenger_color}}">
@@ -52,32 +50,51 @@
             <form action="{{route('chatProfile', ['id' => $friend->id])}}" method="get">
               @csrf
               <button type="submit" class="w-full">
-                <div class="flex cursor-pointer text-gray-700 hover:text-blue-400 hover:bg-gray-500 rounded-md px-2 py-2 my-2">
-                  
-                  <span class="
-                    @if($friend->active_status == 1)
-                      bg-green-500
-                    @else
-                      bg-gray-700
-                    @endif
-                    h-2 w-2 m-2 rounded-full">
-                  </span>
-                  <div class="block w-fit flex-grow semibold text-base px-2 capitalize" style="color: {{Auth::user()->messenger_color}}">
-                    {{$friend->name}}
+                <div class="flex justify-between w-full text-gray-700 hover:text-blue-400 hover:bg-gray-500 rounded-md px-2 py-2 my-1">
+                  <div class="flex">
+                    <div class="
+                      @if($friend->active_status == 1)
+                        bg-green-500
+                      @else
+                        bg-gray-700
+                      @endif
+                      h-2 w-2 m-2 rounded-full inline-block">
+                    </div>
+                    <div class="block semibold text-base px-2 capitalize" style="color: {{Auth::user()->messenger_color}}">
+                      {{$friend->name}}
+                    </div>
                   </div>
-                  <div class="text-sm font-normal text-gray-700 tracking-wide">Team</div>
+                  <div class="relative block text-sm font-normal text-gray-700">                    
+                    @if (isset($user))
+                      @if ($friend->dialogs()->where('to_id', Auth::user()->id)->where('seen', 0)->count() > 0)
+                        <div class="absolute inline-block top-0 -left-8 py-1 px-2.5 text-xs text-center whitespace-nowrap align-baseline font-bold bg-indigo-700 text-white rounded-full z-20">+ {{$friend->dialogs()->where('to_id', Auth::user()->id)->where('seen', 0)->count()}}</div>                          
+                      @else
+                        @if ($friend->dialogs()->where('to_id', Auth::user()->id)->last() !== null)
+                          @if ($lastMessage->from_id == Auth::user()->id)
+                            <h1 class="relative -left-3 top-0 text-base text-gray-300">You: {{$lastMessage->body}}</h1> 
+                          @else
+                            <h1 class="relative -left-3 top-0 text-base text-gray-300">{{$lastMessage->body}}</h1>
+                          @endif
+                        @endif
+                      @endif
+                    @else
+                      @if ($friend->dialogs()->where('to_id', Auth::user()->id)->where('seen', 0)->count() > 0)
+                        <div class="absolute inline-block top-0 -left-8 py-1 px-2.5 text-xs text-center whitespace-nowrap align-baseline font-bold bg-indigo-700 text-white rounded-full z-20">+ {{$friend->dialogs()->where('to_id', Auth::user()->id)->where('seen', 0)->count()}}</div>                          
+                      @else                        
+                        @if ($friend->dialogs()->where('to_id', Auth::user()->id)->last() !== null)
+                          @if ($lastMessage->from_id == Auth::user()->id)
+                            <h1 class="relative -left-3 top-0 text-base text-gray-300">You: {{$lastMessage->body}}</h1> 
+                          @else
+                            <h1 class="relative -left-3 top-0 text-base text-gray-300">{{$lastMessage->body}}</h1>
+                          @endif
+                        @endif                       
+                      @endif
+                    @endif                    
+                  </div>
                 </div>
               </button>
             </form>
           @endforeach
-        </div>
-          {{-- ---------------- [ Search Tab ] ---------------- --}}
-        <div class="py-1 messenger-tab search-tab hidden">
-          {{-- items --}}
-          <p class="messenger-title" style="color: {{Auth::user()->messenger_color}}">Поиск</p>
-          <div class="search-records">
-              <p class="message-hint center-el border-2 rounded-lg" style="border-color: {{Auth::user()->messenger_color}}"><span style="color: {{Auth::user()->messenger_color}}">Что ищем ...</span></p>
-          </div>
         </div>
       </div>
     </div>
@@ -156,6 +173,13 @@
       {{-- Messaging area --}}
       <div class="flex flex-col m-body messages-container app-scroll h-[93%] absolute w-full">
         <div id="element" class="messages h-[84%] px-4 flex flex-col-reverse py-4 overflow-y-scroll relative">
+          @if (session()->has('message'))
+            <div class="container flex justify-center text-center px-2">
+              <p class="w-2/6 my-2 text-gray-50 bg-green-500 rounded-2xl py-2 px-4">
+                {{ session()->get('message') }}
+              </p>
+            </div>
+          @endif
           @if (isset($messages))
             @foreach ($messages as $message)
               @if ($message->from_id == $user->id )

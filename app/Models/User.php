@@ -26,7 +26,8 @@ class User extends Authenticatable
         'image_path',
         'banner_path',
         'setColor',
-        'messenger_color'
+        'messenger_color',
+        'active_status'
     ];
 
     /**
@@ -62,6 +63,11 @@ class User extends Authenticatable
 
     public function dialogs() {
       return $this->hasMany(ChMessage::class, 'from_id')->get();
+    }
+
+    public function toMe()
+    {
+      return $this->hasMany(ChMessage::class, 'to_id')->get();
     }
 
     public function getNameAndSurname()
@@ -153,4 +159,10 @@ class User extends Authenticatable
     {
       return $this->hasMany(Like::class);
     }
+
+    public function receivesBroadcastNotificationsOn()
+    {
+      return 'post_like'. $this->id;
+    }
+
   }

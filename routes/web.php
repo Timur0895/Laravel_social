@@ -3,12 +3,15 @@
 use App\Http\Controllers\ChatController;
 use App\Http\Controllers\ColorController;
 use App\Http\Controllers\FriendsController;
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\NewsController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\StatusController;
 use App\Http\Controllers\UpdateProfileController;
+use App\Models\Post;
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -24,10 +27,25 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('home');
+  if (Auth::user()) {
+    Auth::user()->update([
+      'active_status' => true
+    ]);
+  };
+
+  $users = User::all();
+  $posts = Post::notReply();
+
+  return view('home')->with([
+    'users' => $users,
+    'posts' => $posts
+  ]);
 });
 
+Route::post('/', [HomeController::class, "logout"])->middleware('auth')->name("Logout");
+
 Route::get("/news", [NewsController::class, "index"])->middleware('auth')->name("news");
+Route::get("/news/{category}/", [NewsController::class, "getCategory"])->middleware('auth')->name("getCategory");
 Route::get("/search", [SearchController::class, "getSearch"])->middleware('auth')->name("getSearch");
 
 
@@ -49,19 +67,16 @@ Route::resource("/profile", ProfileController::class)->middleware('auth');
 Route::get('/update', [UpdateProfileController::class, 'profile'])->name('editProfile')->middleware('auth');
 Route::post('/update', [UpdateProfileController::class, 'update'])->name('updateProfile')->middleware('auth');
 
+
 Route::post('/status/{statusId}/reply', [StatusController::class, 'postReply'])->name('postReply')->middleware('auth');
 Route::post('/status/delete/{statusId}/reply', [StatusController::class, 'deleteReply'])->name('deleteReply')->middleware('auth');
 
 Route::get('/status/{statusId}/like', [StatusController::class, 'getLike'])->name('getLike')->middleware('auth');
 Route::post('/status/{statusId}/like', [StatusController::class, 'deleteLike'])->name('deleteLike')->middleware('auth');
+Route::post('/readed/{id}', [StatusController::class, 'readNotify'])->name('readNotify')->middleware('auth');
 
 Route::post('/color', [ColorController::class, 'setColor'])->name('setColor')->middleware('auth');
 Route::post('/text', [ColorController::class, 'textColor'])->name('textColor')->middleware('auth');
-
-
-
-
-
 
 
 Auth::routes();

@@ -4,8 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Models\Like;
 use App\Models\Post;
+use App\Notifications\commentedPost;
+use App\Notifications\likedPost;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class StatusController extends Controller
 {
@@ -26,9 +29,7 @@ class StatusController extends Controller
     {
       //dd($request);
       return redirect()->back();
-    };
-
-    
+    };  
 
     $reply = new Post();
     $reply->description = $request->input("reply-{$post->id}");
@@ -36,6 +37,13 @@ class StatusController extends Controller
     $reply->slug = $post->slug;
     $reply->title = $post->title;
     $post->replies()->save($reply);
+
+    $user = Auth::user();
+
+    $author = $post->user;
+    //dd($author);
+
+    $author->notify(new commentedPost($user, $post));
 
     return redirect()->back();
   }
@@ -51,14 +59,14 @@ class StatusController extends Controller
 
   public function getLike($statusId)
   {
+    $user = Auth::user();
     $post = Post::find($statusId);
+
+    //dd($post);
 
     if(!$post) redirect()->back();
 
-    if(!Auth::user()->isFriendWith($post->user))
-    {
-      return redirect()->back();
-    };
+    
 
     if(Auth::user()->hasLikedStatus($post))
     {
@@ -67,7 +75,24 @@ class StatusController extends Controller
 
     $post->likes()->create(['user_id' => Auth::user()->id]);
 
-    return redirect()->back();
+    $author = $post->user;
+    //dd($author);
+
+    $author->notify(new likedPost($user, $post));
+
+    return back();
+  }
+
+  public function readNotify($id)
+  {
+    $notification = Auth::user()->notifications->where('id', $id)->first();
+
+    $notification->markAsRead();
+
+    //dd($notification);
+
+    return back();
+
   }
 
   public function deleteLike($statusId)
