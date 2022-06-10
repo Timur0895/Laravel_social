@@ -12065,8 +12065,8 @@ Ensure the default browser behavior of the `hidden` attribute.
 .h-2 {
   height: 0.5rem;
 }
-.h-\[7\%\] {
-  height: 7%;
+.h-\[50px\] {
+  height: 50px;
 }
 .h-\[93\%\] {
   height: 93%;
@@ -12958,26 +12958,6 @@ figure div:nth-child(8):after{-webkit-animation-delay:-4;animation-delay:-4;}
 body {
   margin: 0;
 }
-/*internet connection*/
-.internet-connection {
-  display: none;
-  background: rgba(0, 0, 0, 0.76);
-  position: absolute;
-  top: 43px;
-  left: 0;
-  right: 0;
-  text-align: center;
-  padding: 4px;
-  color: #fff;
-}
-.internet-connection span {
-  display: none;
-}
-
-/*green background RGBA*/
-.successBG-rgba {
-  background: rgba(54, 180, 36, 0.76) !important;
-}
 
 /* app scroll*/
 .app-scroll::-webkit-scrollbar {
@@ -13026,7 +13006,7 @@ body {
   margin: 10px;
 }
 .messenger-listView .m-body {
-  margin-top: 141px;
+  margin-top: 95px;
 }
 .messenger-messagingView {
   position: relative;
@@ -13087,7 +13067,7 @@ body {
 }
 .messenger-tab {
   overflow: auto;
-  height: calc(100vh - 143px);
+  height: calc(100vh - 95px);
   position: relative;
 }
 .add-to-favorite {

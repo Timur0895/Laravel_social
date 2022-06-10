@@ -3,7 +3,7 @@
 @section('content')
   <div class="messenger relative w-5/6 h-screen" style="{{Auth::user()->setColor}}">   
     {{-- ----------------------Users/Groups lists side---------------------- --}}
-    <div class="messenger-listView">
+    <div class="messenger-listView flex flex-col">
       {{-- Header and search bar --}}
       <div class="m-header border-b-2 border-r-2" style="border-color: {{Auth::user()->messenger_color}}">
         <nav>
@@ -101,22 +101,22 @@
       {{-- ----------------------Messaging side---------------------- --}}
     <div class="messenger-messagingView">
       {{-- header title [conversation name] amd buttons --}}
-      <div class="m-header m-header-messaging bg-gray-600 h-[7%]">
+      <div class="m-header m-header-messaging bg-gray-700 h-[50px]">
         <nav class="flex justify-between items-center">
           {{-- header back button, avatar and user name --}}
           <div style="display: inline-flex;">
             @if (isset($user))
               <div class="flex flex-row items-center">
-                <img class=" w-8 h-8 mr-2 rounded-full" src="
+                <img class="w-8 h-8 mr-2 rounded-full" src="
                 @if($user->image_path) 
                   {{asset('images/'. $user->image_path)}} 
                 @else 
                   {{asset('/images/default.png')}} 
                 @endif" alt="">
-                <a href="{{route('getProfile', ['usermail' => $user->email])}}" class="capitalize user-name">{{$user->name}}</a>
+                <a href="{{route('getProfile', ['usermail' => $user->email])}}" class="capitalize user-name text-white hover:text-gray-100 transition duration-300 ease-in-out">{{$user->name}}</a>
               </div>
             @else
-              <a href="" class="mt-2 capitalize user-name">Диалоги</a>                
+              <a href="" class="capitalize user-name text-white hover:text-gray-100 transition duration-300 ease-in-out">Диалоги</a>                
             @endif            
           </div>
           {{-- header buttons --}}
@@ -248,19 +248,19 @@
         </div>
         
         {{-- Send Message Form --}}
-        <div class="w-full h-[10%] py-2 border-t-2" style="border-color: {{Auth::user()->messenger_color}}">
+        <div class="w-full h-[10%] py-4 border-t-2" style="border-color: {{Auth::user()->messenger_color}}">
           @if (isset($user))
           <form class="flex flex-row" id="message-form" method="POST" action="{{ route('sendMessage', ['id' => $user->id]) }}" enctype="multipart/form-data">
             @csrf
             <label class="mx-2 w-10 text-center"><span class="relative top-[10px] fas fa-paperclip fa-2xl" style="color: {{Auth::user()->messenger_color}}"></span><input type="file" class="hidden upload-attachment" name="file" accept="image/*, .txt, .rar, .zip" /></label>
-            <textarea name="message" class="bg-gray-800 m-send app-scroll" placeholder="Ваше сообщение ..."></textarea>
+            <textarea name="message" class="bg-gray-800 m-send app-scroll text-gray-100" placeholder="Ваше сообщение ..."></textarea>
             <button class="w-10 mx-2" type="submit"><span class="fas fa-paper-plane fa-2xl" style="color: {{Auth::user()->messenger_color}}"></span></button>
           </form> 
           @else
             <form class="flex flex-row" id="message-form" method="POST" action="" enctype="multipart/form-data">
               @csrf
               <label class="mx-2 w-10 text-center"><span class="relative top-[10px] fas fa-paperclip fa-2xl" style="color: {{Auth::user()->messenger_color}}"></span><input type="file" class="hidden upload-attachment" name="file" accept="image/*, .txt, .rar, .zip" /></label>
-              <textarea name="message" class="bg-gray-800 m-send app-scroll" placeholder="Ваше сообщение ..."></textarea>
+              <textarea name="message" class="bg-gray-800 m-send app-scroll text-gray-100" placeholder="Ваше сообщение ..."></textarea>
               <button class="w-10 mx-2" disabled><span class="fas fa-paper-plane fa-2xl" style="color: {{Auth::user()->messenger_color}}"></span></button>
             </form>
           @endif
