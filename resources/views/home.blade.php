@@ -460,10 +460,26 @@
                       </div>
                       <div class="block p-6 rounded-lg shadow-xl hover:shadow-cyan-500/40 transition duration-500 ease-in-out bg-gradient-to-bl from-gray-900 to-black w-[50rem] ml-6 mb-10">
                         <div class="flex justify-between mb-4">
-                          <a href="#!" class="font-medium duration-300 transition ease-in-out text-sm" style="color: {{Auth::user()->messenger_color}}">New Web Design</a>
+                          <a href="#!" class="font-medium duration-300 transition ease-in-out text-sm" style="color: {{Auth::user()->messenger_color}}">Админ панель. Начало</a>
                           <a href="#!" class="font-medium duration-300 transition ease-in-out text-sm" style="color: {{Auth::user()->messenger_color}}">8 неделя</a>
                         </div>
-                        <p class="text-gray-200 mb-6">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque scelerisque diam non nisi semper, et elementum lorem ornare. Maecenas placerat facilisis mollis. Duis sagittis ligula in sodales vehicula.</p>
+                        <p class="text-gray-200 mb-6">Перешел к работе над Админ панелью, начал с фронта подобрал и решил каким будет дизайн плюс что именно нужно отображать в панелях. Самое первое добавил страцину входа и логирование на /admin. Тут идет проверка на существование атрибутта is_admin у пользователя. Если данные ввели ошибочно  то выводится error "не существует пользователя", если вводит почту существующий пользователь, но не имеет прав доступа,то выводится error "Вы не админ". Далее после авторизации выходит панель с общей информацией  по сайту: кол-во участников, постов, комментов, таблица пользователей их данные и роль. Далее занялся страницей добавления категории. Здесь было реализованно CRUD, однако при удалении категории пришлось доработать данную  функцию таким образом, что удаляется категория, а не связанные с ней посты. Грубо говоря, разорвал связь с постами перед удалением через detach().</p>
+                      </div>
+                    </div>
+                  </li>
+                  <li>
+                    <div class="md:flex flex-start">
+                      <div class="-ml-3 w-6 h-6 flex items-center justify-center rounded-full bg-slate-800">
+                        <svg aria-hidden="true" focusable="false" data-prefix="fas" class="w-3 h-3" style="color: {{Auth::user()->messenger_color}}" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
+                          <path fill="currentColor" d="M0 464c0 26.5 21.5 48 48 48h352c26.5 0 48-21.5 48-48V192H0v272zm64-192c0-8.8 7.2-16 16-16h288c8.8 0 16 7.2 16 16v64c0 8.8-7.2 16-16 16H80c-8.8 0-16-7.2-16-16v-64zM400 64h-48V16c0-8.8-7.2-16-16-16h-32c-8.8 0-16 7.2-16 16v48H160V16c0-8.8-7.2-16-16-16h-32c-8.8 0-16 7.2-16 16v48H48C21.5 64 0 85.5 0 112v48h448v-48c0-26.5-21.5-48-48-48z"></path>
+                        </svg>
+                      </div>
+                      <div class="block p-6 rounded-lg shadow-xl hover:shadow-cyan-500/40 transition duration-500 ease-in-out bg-gradient-to-bl from-gray-900 to-black w-[50rem] ml-6 mb-10">
+                        <div class="flex justify-between mb-4">
+                          <a href="#!" class="font-medium duration-300 transition ease-in-out text-sm" style="color: {{Auth::user()->messenger_color}}">Админ панель. Dashboard</a>
+                          <a href="#!" class="font-medium duration-300 transition ease-in-out text-sm" style="color: {{Auth::user()->messenger_color}}">9 неделя</a>
+                        </div>
+                        <p class="text-gray-200 mb-6">На старнице dashboard поработал над отображение информации в кнопке "подробнее". при нажатии выводится модальное окно с данными о пользователе. Все это работает за счет получения каждого Id пользователся. При помощи Relations в модальном окне вывел отображение всех постов (hasMany) и отображдение категорий у данного поста (BelongsToMany)</p>
                       </div>
                     </div>
                   </li>

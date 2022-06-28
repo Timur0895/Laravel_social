@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\Admin\CategoriesController;
+use App\Http\Controllers\Admin\IndexController;
 use App\Http\Controllers\ChatController;
 use App\Http\Controllers\ColorController;
 use App\Http\Controllers\FriendsController;
@@ -80,4 +82,20 @@ Route::post('/text', [ColorController::class, 'textColor'])->name('textColor')->
 
 
 Auth::routes();
+
+
+Route::get('/admin', [IndexController::class, 'index']);
+Route::post('/admin', [IndexController::class, 'login'])->name('loginAdmin');
+Route::get('/admin/dashboard', [IndexController::class, 'dashboard'])->name('dashboard');
+Route::get('/admin/dashboard/user-{id}/', [IndexController::class, 'getUser'])->name('getUser');
+
+
+
+
+
+Route::get('/admin/categories', [CategoriesController::class, 'index'])->name('adminCategories');
+Route::post('/admin/categories', [CategoriesController::class, 'addCategory'])->name('addCategory');
+Route::post('/admin/categories/update-{id}/', [CategoriesController::class, 'updateCategory'])->name('updateCategory');
+Route::post('/admin/categories/{slug}/', [CategoriesController::class, 'deleteCategory'])->name('deleteCategory');
+Route::get('/admin/categories/{id}/', [CategoriesController::class, 'editCategory'])->name('editCategory');
 
